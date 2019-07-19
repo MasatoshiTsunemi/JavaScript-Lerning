@@ -1,0 +1,1 @@
+window.alert(200*5);

@@ -1,0 +1,27 @@
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <title>演習6(モーダル)</title>
+    <link rel="stylesheet" href="index.css">
+  </head>
+
+  <body>
+    <p>名前を変更するには、<button id="here">ここ</button>をクリックしてください</p>
+    <p id="display">○○さん、こんにちは</p>
+    <div id="modal_content">
+      <p>名前を入力して下さい。</p>
+      <p><label for="name">名前：</label>
+        <input type="text" name="chname"></p>
+        <button id="write">書き込む</button>
+        <button id="modal_close">閉じる</button>
+      </div>
+      <div id="modal_overlay"></div>
+      <script type="text/javascript"
+      src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+      <script src="script.js"></script>
+  </body>
+
+</html>
