@@ -1,0 +1,12 @@
+①value値に日本語を持たせないほうがよいです。
+
+　ソースの処理に日本語があると思わぬところでバグが起きる原因になります。
+　value値もアルファベットを使用するようにしましょう。
+　✕value="和食"　〇value="japanesefood"
+
+②繰り返し使うことがなく、かつそこまで複雑でないセレクタであれば、
+1行にしてしまって大丈夫です。
+var option = $('').text($(sub_menu).text());
+$('#remove_pulldown_sub').append(option);
+→
+$('#remove_pulldown_sub').append($('').text($(sub_menu).text()));
