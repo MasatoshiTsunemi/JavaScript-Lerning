@@ -1,0 +1,19 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="IE=edge">
+  <title>演習10(空き席状況)</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  
+
+  <script type="text/javascript"
+  src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

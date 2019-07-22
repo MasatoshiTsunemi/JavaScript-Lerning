@@ -1,0 +1,15 @@
+.box{
+  display:inline-block;
+  color: black;
+  background: white;
+  border-top: solid 5px black;
+  box-shadow: 0 3px 5px;
+}
+.box h3 {
+  margin: 10;
+  padding: 10;
+}
+
+.hidden{
+  display: none;
+}
