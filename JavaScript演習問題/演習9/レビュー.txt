@@ -1,0 +1,24 @@
+ステータス を 新規 から フィードバック に変更
+担当者 を 継続研修講師(2019年度) から 恒見 正俊 に変更
+引用 編集 削除
+一度JsonはAjaxで読み込んでいるので、国が選択される度に再取得は不要かもしれない（個人的には悪いとは思っていませんが）
+もし、仕様として再取得が必要なのであれば、以下の処理の検討が必要
+
+・通信エラー
+・選択した国が、再取得時に存在しないパターン
+
+セレクトボックスはもともと、ある値を選択した際のValue値を取得できるように用意されているものなので、IDではなvalue属性を使うようにしましょう
+
+      $(data).each(function(){
+        var countryId = this.id
+        var worldHeritage = this.worldHeritageSiteName
+
+        // boxに世界遺産を表示
+        if(selectedId == countryId){
+          $('#heritage').text(worldHeritage);
+          $('.box').removeClass('hidden');
+          return false;
+        } else {
+          $('.box').addClass('hidden');
+        }
+ifの条件式の中にあれば十分なものとそうでないものの処理を切り分けて、整理してみましょう。

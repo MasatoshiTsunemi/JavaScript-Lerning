@@ -5,33 +5,32 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="IE=edge">
   <title>演習8(ナビゲーションメニュー)</title>
-  <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
   <ul>
-    <li class="main_menu">和食
+    <li class="main_menu" id="jp_food">和食
       <ul>
-        <li class="sub_menu" value="和食">うどん</li>
-        <li class="sub_menu" value="和食">蕎麦</li>
-        <li class="sub_menu" value="和食">寿司</li>
+        <li class="sub_menu" value="jp_food">うどん</li>
+        <li class="sub_menu" value="jp_food">蕎麦</li>
+        <li class="sub_menu" value="jp_food">寿司</li>
       </ul>
     </li>
   </ul>
   <ul>
-    <li class="main_menu">中華
+    <li class="main_menu" id="chn_food">中華
       <ul>
-        <li class="sub_menu" value="中華">麻婆豆腐</li>
-        <li class="sub_menu" value="中華">回鍋肉</li>
-        <li class="sub_menu" value="中華">餃子</li>
+        <li class="sub_menu" value="chn_food">麻婆豆腐</li>
+        <li class="sub_menu" value="chn_food">回鍋肉</li>
+        <li class="sub_menu" value="chn_food">餃子</li>
       </ul>
     </li>
   </ul>
   <ul>
-    <li class="main_menu">洋食
+    <li class="main_menu" id="foreign_food">洋食
       <ul>
-        <li class="sub_menu" value="洋食">ハンバーグ</li>
-        <li class="sub_menu" value="洋食">スパゲティ</li>
+        <li class="sub_menu" value="foreign_food">ハンバーグ</li>
+        <li class="sub_menu" value="foreign_food">スパゲティ</li>
       </ul>
     </li>
   </ul>
@@ -39,9 +38,9 @@
   <form id="add_menu">
     <select id="add_pulldown_menu">
       <option>メニューを選択してください</option>
-      <option value="和食">和食</option>
-      <option value="中華">中華</option>
-      <option value="洋食">洋食</option>
+      <option value="jp_food">和食</option>
+      <option value="chn_food">中華</option>
+      <option value="foreign_food">洋食</option>
     </select>
       <input id="form" type="text">
       <button type="button" id="add_button">追加</button>
@@ -50,9 +49,9 @@
   <form id="remove_menu">
     <select id="remove_pulldown_main">
       <option>メニューを選択してください</option>
-      <option value="和食">和食</option>
-      <option value="中華">中華</option>
-      <option value="洋食">洋食</option>
+      <option value="jp_food">和食</option>
+      <option value="chn_food">中華</option>
+      <option value="foreign_food">洋食</option>
     </select>
     <select id="remove_pulldown_sub">
       <option>メニューを選択してください</option>
