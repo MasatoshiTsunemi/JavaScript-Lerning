@@ -77,7 +77,7 @@ $(document).ready(function(){
     $('#modal_contents').fadeIn('slow');
     $('#modal_overlay').fadeIn('slow');
     var course = $(this).siblings('h2');
-    console.log(course.text());
+
     // 登録ボタンがクリックされたら講座名を編集
     $('#entry').click(function(){
 
@@ -86,11 +86,22 @@ $(document).ready(function(){
         console.log(course.text());
         $(course).text($('#text').val())
 
+        // 講座オブジェクトに編集を反映
+
+
         // txetに文字が入力されていたら、モーダルを閉じる
         $('#modal_contents, #modal_overlay').fadeOut('slow');
         $('#text').val("");
       }
     });
+  });
+
+  // 削除ボタンがクリックされたら、その講座名を消去
+  $('.list').on('click', '.delete', function(){
+    $(this).parent('li').remove();
+
+    // 講座オブジェクトに削除を反映
+    
   });
 
 
