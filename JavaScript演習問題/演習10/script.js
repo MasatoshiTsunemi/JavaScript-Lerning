@@ -4,11 +4,19 @@ $(document).ready(function(){
   .done(function(data){
     $(data).each(function(){
 
+      // 講座オブジェクトの作成
+      var course_object = {id: '' + this.id + '', name: '' + this.name + '', crowded: '' + this.crowded + ''}
+
       // 講座名を表示
-      if(this.id === $('li[id]')){
-        $('h2').text(this.name);
-      }
-      
+      var add_li = $("<li class='seminar'></li>");
+      var add_h2 = $("<h2> " + this.name + " </h2>");
+      var add_p_check = $("<p class='check'>空き席状況を確認</p>");
+      var add_p_edit = $("<p class='edit'>編集</p>");
+      var add_p_delete = $("<p class='delete'>削除</p>");
+      $(add_li).append(add_h2, add_p_check, add_p_edit, add_p_delete);
+      $('.list').append(add_li);
+
+      // crowdedがyesなら、crowdedクラスを追加
       if(this.crowded === 'yes') {
         var idName = '#' + this.id;
         $(idName).find('.check').addClass('crowded');
@@ -28,10 +36,32 @@ $(document).ready(function(){
     }
   });
 
-  // 新規登録ボタンか編集がクリックされたらモーダルを開く
-  $('#sing_up, .edit').click(function(){
+  // 新規登録ボタンがクリックされたらモーダルを開く
+  $('#sign_up').click(function(){
     $('#modal_contents').fadeIn('slow');
     $('#modal_overlay').fadeIn('slow');
+
+    // 登録ボタンがクリックされたら新講座名を表示
+    $('#entry').click(function(){
+
+      // textに文字が入力されていたら新講座名を表示
+      if($('#text').val() !== ""){
+        var add_li = $("<li class='seminar'></li>");
+        var add_h2 = $("<h2> " + $('#text').val() + " </h2>");
+        var add_p_check = $("<p class='check'>空き席状況を確認</p>");
+        var add_p_edit = $("<p class='edit'>編集</p>");
+        var add_p_delete = $("<p class='delete'>削除</p>");
+        $(add_li).append(add_h2, add_p_check, add_p_edit, add_p_delete);
+        $('.list').append(add_li);
+
+      // 講座オブジェクトに新講座を追加
+      // $(course_object).id =
+
+        // txetに文字が入力されていたら、モーダルを閉じる
+        $('#modal_contents, #modal_overlay').fadeOut('slow');
+        $('#text').val("");
+      }
+    });
   });
 
   // 閉じるボタンかモーダルオーバーレイがクリックされたらモーダルとモーダルオーバーレイを閉じる
@@ -41,4 +71,27 @@ $(document).ready(function(){
     // モーダルが閉じたらテキスト内の文字を消去
     $('#text').val("");
   });
+
+  // 編集ボタンがクリックされたら、モーダルを開く
+  $('.list').on('click', '.edit', function(){
+    $('#modal_contents').fadeIn('slow');
+    $('#modal_overlay').fadeIn('slow');
+    var course = $(this).siblings('h2');
+    console.log(course.text());
+    // 登録ボタンがクリックされたら講座名を編集
+    $('#entry').click(function(){
+
+      // txetに文字が入力されていたら講座名を編集
+      if($('#text').val() !== ""){
+        console.log(course.text());
+        $(course).text($('#text').val())
+
+        // txetに文字が入力されていたら、モーダルを閉じる
+        $('#modal_contents, #modal_overlay').fadeOut('slow');
+        $('#text').val("");
+      }
+    });
+  });
+
+
 });

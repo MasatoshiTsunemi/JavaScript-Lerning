@@ -150,9 +150,10 @@ a:hover {
   z-index: 2;
   position: fixed;
   background: white;
-  width: 75%;
   margin: 20px;
   padding: 10px;
+  top: 350px;
+  left: 215px;
 }
 #modal_overlay {
   z-index:1;
