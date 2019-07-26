@@ -52,8 +52,9 @@ $(document).ready(function(){
     // 登録ボタンがクリックされたら新講座名を表示
     $('#entry').click(function(){
 
-      // textに文字が入力されていたら新講座名を表示
-      if($('#text').val() !== ""){
+      // textの文字数が１文字以上、20文字以下が入力されていたら新講座名を表示
+      if(($('#text').val() !== "") && ($('#text').val().length <= 20)){
+        return false;
         var add_li = $("<li class='seminar' id=" + course_id + "></li>");
         var add_h2 = $("<h2> " + $('#text').val() + " </h2>");
         var add_p_check = $("<p class='check'>空き席状況を確認</p>");
@@ -64,7 +65,7 @@ $(document).ready(function(){
 
         // 講座オブジェクトに講座の新規登録情報の追加を反映
         course_object.push(
-          {"id":String(course_id), 
+          {"id":String(course_id),
           "name":$('#text').val(),
           "crowded":"no"});
 
@@ -74,6 +75,8 @@ $(document).ready(function(){
         // txetに文字が入力されていたら、モーダルを閉じる
         $('#modal_contents, #modal_overlay').fadeOut('slow');
         $('#text').val("");
+      } else {
+        window.alert("文字数は1文字以上20文字以下で登録してください")
       }
     });
   });
@@ -90,24 +93,30 @@ $(document).ready(function(){
   $('.list').on('click', '.edit', function(){
     $('#modal_contents').fadeIn('slow');
     $('#modal_overlay').fadeIn('slow');
+    $(this).parent('li').addClass('marker')
     var course = $(this).siblings('h2');
 
-    // 登録ボタンがクリックされたら講座名を編集
-    $('#entry').click(function(){
-
-      // txetに文字が入力されていたら講座名を編集
-      if($('#text').val() !== ""){
-        console.log(course.text());
-        $(course).text($('#text').val())
-
-        // 講座オブジェクトに編集を反映
 
 
-        // txetに文字が入力されていたら、モーダルを閉じる
-        $('#modal_contents, #modal_overlay').fadeOut('slow');
-        $('#text').val("");
-      }
-    });
+    // 現在の講座名をtextに表示
+    $('#text').val($(course).text())
+  });
+
+  // 登録ボタンがクリックされたら講座名を編集
+  $('#entry').click(function(){
+
+    // txetに文字が入力されていたら講座名を編集
+    if($('#text').val() !== ""){
+      console.log(course.text());
+      $(course).text($('#text').val())
+
+      // 講座オブジェクトに編集を反映
+
+
+      // txetに文字が入力されていたら、モーダルを閉じる
+      $('#modal_contents, #modal_overlay').fadeOut('slow');
+      $('#text').val("");
+    }
   });
 
   // 削除ボタンがクリックされたら、その講座名を消去
