@@ -1,14 +1,22 @@
 $(document).ready(function(){
+
+  var course_object   // 講座オブジェクトを定義
+  var course_id   // jsonデータのid
+
   //ファイルの読み込み
   $.ajax({url: 'data.json', dataType: 'json'})
   .done(function(data){
+
+    // jsonから講座オブジェクトの作成
+    course_object = data;
+    course_id = data.length
+
     $(data).each(function(){
 
-      // 講座オブジェクトの作成
-      var course_object = {id: '' + this.id + '', name: '' + this.name + '', crowded: '' + this.crowded + ''}
+      // course_object = {id: '' + this.id + '', name: '' + this.name + '', crowded: '' + this.crowded + ''}
 
       // 講座名を表示
-      var add_li = $("<li class='seminar'></li>");
+      var add_li = $("<li class='seminar' id=" + this.id + "></li>");
       var add_h2 = $("<h2> " + this.name + " </h2>");
       var add_p_check = $("<p class='check'>空き席状況を確認</p>");
       var add_p_edit = $("<p class='edit'>編集</p>");
@@ -28,7 +36,7 @@ $(document).ready(function(){
   });
 
   //クリックされたら空き席状況を表示
-  $('.check').click(function(){
+  $('.list').on('click', '.check' ,function(){
     if($(this).hasClass('crowded')) {
       $(this).text('残席わずか').addClass('red');
     } else {
@@ -46,7 +54,7 @@ $(document).ready(function(){
 
       // textに文字が入力されていたら新講座名を表示
       if($('#text').val() !== ""){
-        var add_li = $("<li class='seminar'></li>");
+        var add_li = $("<li class='seminar' id=" + course_id + "></li>");
         var add_h2 = $("<h2> " + $('#text').val() + " </h2>");
         var add_p_check = $("<p class='check'>空き席状況を確認</p>");
         var add_p_edit = $("<p class='edit'>編集</p>");
@@ -54,8 +62,14 @@ $(document).ready(function(){
         $(add_li).append(add_h2, add_p_check, add_p_edit, add_p_delete);
         $('.list').append(add_li);
 
-      // 講座オブジェクトに新講座を追加
-      // $(course_object).id =
+        // 講座オブジェクトに講座の新規登録情報の追加を反映
+        course_object.push(
+          {"id":String(course_id), 
+          "name":$('#text').val(),
+          "crowded":"no"});
+
+        // 講座オブジェクトidを更新
+        course_id += 1;
 
         // txetに文字が入力されていたら、モーダルを閉じる
         $('#modal_contents, #modal_overlay').fadeOut('slow');
@@ -98,11 +112,32 @@ $(document).ready(function(){
 
   // 削除ボタンがクリックされたら、その講座名を消去
   $('.list').on('click', '.delete', function(){
-    $(this).parent('li').remove();
+    if(window.confirm('本当に削除しますか？')){
+      $(this).parent('li').remove();
 
-    // 講座オブジェクトに削除を反映
-    
+      var selected_id = $(this).parent('li').attr('id');
+      // 講座オブジェクトに削除を反映
+      $(course_object).each(function(index){
+        if(this.id === selected_id){
+          course_object.splice(index,1);
+        }
+      });
+    }
   });
 
 
+  // ダウンロードボタンがクリックされたら、更新されたjsonファイルをダウンロードする
+  $('#download').on('click',function(){   //ダウンロードボタン
+
+    /** ダウンロードデータの作成 **/
+    var text = JSON.stringify(course_object, null, 2);
+    var blob = new Blob([text], {type: "application/json"});
+
+    /** ダウンロードリンクの作成 **/
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.target = '_blank';
+    a.download = 'data';
+    a.click();
+  });
 });
