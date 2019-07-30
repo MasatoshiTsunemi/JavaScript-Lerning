@@ -20,8 +20,7 @@ $(document).ready(function(){
 
       // crowdedがyesなら、crowdedクラスを追加
       if(this.crowded === 'yes') {
-        var id_name = '#' + this.id;
-        $(id_name).find('.check').addClass('crowded');
+        $('.check').addClass('crowded');
       }
     });
   })
@@ -32,6 +31,7 @@ $(document).ready(function(){
 
   //クリックされたら空き席状況を表示
   $('.list').on('click', '.check' ,function(){
+    console.log($(this).hasClass('crowded'));
     if($(this).hasClass('crowded')) {
       $(this).text('残席わずか').addClass('red');
     } else {
@@ -41,6 +41,7 @@ $(document).ready(function(){
 
   // 「新規登録」ボタンをクリックしたときの処理
   $('#sign_up').click(function(){
+    // モーダルフェードイン
     modal_fadein();
   });
 
@@ -53,7 +54,7 @@ $(document).ready(function(){
     $(this).parent('li').addClass('marker_edit');
 
     // 処理する講座名をtextに表示
-    $('#text').val(all_course_object[$(this).parent('li').attr('id')].name);
+    $('#text').val(all_course_object[$(this).parent('li').attr('value')].name);
   });
 
   // 「登録する」ボタンをクリックしたときの処理
@@ -66,7 +67,7 @@ $(document).ready(function(){
       window.alert("講座名が未入力です");
       return false;
     } else if($('#text').val().length >= 20){
-      window.alert("講座名は20文字以下で登録してください");
+      window.alert("講座名は19文字以内で登録してください");
       return false;
     }
 
@@ -76,7 +77,7 @@ $(document).ready(function(){
       $('.marker_edit').children('h2').text(($('#text').val()));
 
       // 講座オブジェクトに編集を反映
-      all_course_object[$('.marker_edit').attr('id')].name = $('#text').val();
+      all_course_object[$('.marker_edit').attr('value')].name = $('#text').val();
 
     // 条件を満たさなかったときの処理
     } else {
@@ -106,7 +107,7 @@ $(document).ready(function(){
       $(this).parent('li').remove();
 
       // 講座オブジェクトに削除を反映
-      var selected_id = $(this).parent('li').attr('id');
+      var selected_id = $(this).parent('li').attr('value');
       $(all_course_object).each(function(index){
         if(this.id === selected_id){
           all_course_object.splice(index,1);
@@ -134,7 +135,7 @@ $(document).ready(function(){
   function create_seminar(id, name){
     corse_form = $('<li>');
     corse_form.addClass('seminar');
-    corse_form.attr('id', id);
+    corse_form.attr('value', id);
     corse_form.append($('<h2>').append(name));
     corse_form.append($("<p class='check'>空き席状況を確認</p>"));
     corse_form.append($("<p class='edit'>編集</p>"));
