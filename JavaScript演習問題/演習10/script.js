@@ -1,39 +1,31 @@
 $(document).ready(function(){
 
-  var course_object   // 講座オブジェクトを定義
-  var course_id   // jsonデータのid
+  var all_course_object   // 講座オブジェクトを定義
+  var course_number   // オブジェクト数
 
-  // 講座作成
-  var createSeminar = function(id, name){
-  var add_li = $("<li class='seminar' id=" + id + "></li>");
-  var add_h2 = $("<h2> " + name + " </h2>");
-  var add_p_check = $("<p class='check'>空き席状況を確認</p>");
-  var add_p_edit = $("<p class='edit'>編集</p>");
-  var add_p_delete = $("<p class='delete'>削除</p>");
-  $(add_li).append(add_h2, add_p_check, add_p_edit, add_p_delete);
-  $('.list').append(add_li);
-  }
-
-  //ファイルの読み込み
+  // ファイルの読み込み
   $.ajax({url: 'data.json', dataType: 'json'})
+  // 正常
   .done(function(data){
 
-    // jsonから講座オブジェクトの作成
-    course_object = data;
-    course_id = data.length;
+    // jsonデータから講座オブジェクトを作成
+    all_course_object = data;
+    // jsonデータからオブジェクト数を取得
+    course_number = data.length;
 
     $(data).each(function(){
 
       // 講座作成
-      createSeminar(this.id, this.name);
+      create_seminar(this.id, this.name);
 
       // crowdedがyesなら、crowdedクラスを追加
       if(this.crowded === 'yes') {
-        var idName = '#' + this.id;
-        $(idName).find('.check').addClass('crowded');
+        var id_name = '#' + this.id;
+        $(id_name).find('.check').addClass('crowded');
       }
     });
   })
+  // エラー
   .fail(function(){
     window.alert('読み込みエラー');
   });
@@ -47,27 +39,27 @@ $(document).ready(function(){
     }
   });
 
-  // 新規登録ボタンがクリックされたらモーダルを開く
+  // 「新規登録」ボタンをクリックしたときの処理
   $('#sign_up').click(function(){
-    $('#modal_contents').fadeIn('slow');
-    $('#modal_overlay').fadeIn('slow');
-
+    modal_fadein();
   });
 
-  // 編集ボタンがクリックされたら、モーダルを開く
+  // 「編集」ボタンをクリックしたときの処理
   $('.list').on('click', '.edit', function(){
-    $('#modal_contents').fadeIn('slow');
-    $('#modal_overlay').fadeIn('slow');
+    // モーダルフェードイン
+    modal_fadein();
 
-    // 編集ボタンがクリックされたら、marker_editクラスを追加
+    // marker_editクラスを追加
     $(this).parent('li').addClass('marker_edit');
 
-    // 現在の講座名をtextに表示
-    $('#text').val($($(this).siblings('h2')).text())
+    // 処理する講座名をtextに表示
+    $('#text').val(all_course_object[$(this).parent('li').attr('id')].name);
   });
 
-  // 登録ボタンがクリックされたら新講座名を表示
+  // 「登録する」ボタンをクリックしたときの処理
   $('#entry').click(function(){
+    // エンターキー無効化
+    enter();
 
     // validation
     if($('#text').val() == ""){
@@ -78,73 +70,56 @@ $(document).ready(function(){
       return false;
     }
 
-    // seminarクラスにmarker_editがあれば、編集を実行
+    // 条件を満たしたときの処理
     if($('.seminar').hasClass('marker_edit')){
+      // 編集を実行
       $('.marker_edit').children('h2').text(($('#text').val()));
 
       // 講座オブジェクトに編集を反映
-      course_object[$('.marker_edit').attr('id')].name = $('#text').val();
+      all_course_object[$('.marker_edit').attr('id')].name = $('#text').val();
 
-      // 講座名が編集されたら、モーダルを閉じる
-      $('#modal_contents, #modal_overlay').fadeOut('slow');
-      $('#text').val("");
-
-      // seminarクラスからmarker_editクラスを削除
-      $('.seminar').removeClass('marker_edit');
-
+    // 条件を満たさなかったときの処理
     } else {
+      // 新規登録を実行
+      create_seminar(course_number, $('#text').val());
 
-      // seminarクラスにmarker_editがあれば、新規登録を実行
-      createSeminar(course_id, $('#text').val());
-
-      // 講座オブジェクトに講座の新規登録情報の追加を反映
-      course_object.push(
-        {"id":String(course_id),
+      // 講座オブジェクトに講座の新規登録の情報を反映
+      all_course_object.push(
+        {"id":String(course_number),
         "name":$('#text').val(),
         "crowded":"no"});
-
-      // 講座オブジェクトidを更新
-      course_id += 1;
-
-      // txetに文字が入力されていたら、モーダルを閉じる
-      $('#modal_contents, #modal_overlay').fadeOut('slow');
-
-      // モーダルを閉じたら、text内の文字を消去
-      $('#text').val("");
+      course_number += 1;
     }
+    // モーダルフェードアウト
+    modal_fadeout();
   });
 
-  // 閉じるボタンかモーダルオーバーレイがクリックされたらモーダルとモーダルオーバーレイを閉じる
+  // 「閉じる」ボタンか「モーダルオーバーレイ」をクリックしたときの処理
   $('#close, #modal_overlay').click(function(){
-    $('#modal_contents, #modal_overlay').fadeOut('slow');
-
-    // text内の文字を消去
-    $('#text').val("");
-
-    // marker_editクラスを削除
-    $('.seminar').removeClass('marker_edit');
+    // モーダルフェードアウト
+    modal_fadeout();
   });
 
-  // 削除ボタンがクリックされたら、その講座名を消去
+  // 「削除ボタン」をクリックしたときの処理
   $('.list').on('click', '.delete', function(){
     if(window.confirm('本当に削除しますか？')){
       $(this).parent('li').remove();
 
       // 講座オブジェクトに削除を反映
       var selected_id = $(this).parent('li').attr('id');
-      $(course_object).each(function(index){
+      $(all_course_object).each(function(index){
         if(this.id === selected_id){
-          course_object.splice(index,1);
+          all_course_object.splice(index,1);
         }
       });
     }
   });
 
-  // ダウンロードボタンがクリックされたら、更新されたjsonファイルをダウンロードする
-  $('#download').on('click',function(){   //ダウンロードボタン
+  // ダウンロードボタンをクリックしたときの処理
+  $('#download').on('click',function(){
 
     // ダウンロードデータの作成
-    var text = JSON.stringify(course_object, null, 2);
+    var text = JSON.stringify(all_course_object, null, 2);
     var blob = new Blob([text], {type: "application/json"});
 
     // ダウンロードリンクの作成
@@ -154,4 +129,41 @@ $(document).ready(function(){
     a.download = 'data';
     a.click();
   });
+
+  // 講座フォームを作成
+  function create_seminar(id, name){
+    corse_form = $('<li>');
+    corse_form.addClass('seminar');
+    corse_form.attr('id', id);
+    corse_form.append($('<h2>').append(name));
+    corse_form.append($("<p class='check'>空き席状況を確認</p>"));
+    corse_form.append($("<p class='edit'>編集</p>"));
+    corse_form.append($("<p class='delete'>削除</p>"));
+    $('.list').append(corse_form);
+  }
+
+  // モーダルフェードイン
+  function modal_fadein(){
+    $('#modal_contents').fadeIn('slow');
+    $('#modal_overlay').fadeIn('slow');
+  }
+
+  // モーダルフェードアウト
+  function modal_fadeout(){
+    $('#modal_contents').fadeOut('slow');
+    $('#modal_overlay').fadeOut('slow');
+    // textフォーム内の文字を消去
+    $('#text').val("");
+    // seminarクラスからmarker_editクラスを削除
+    $('.seminar').removeClass('marker_edit');
+  }
+
+  // エンターキー無効化
+  document.onkeypress = enter;
+  function enter(){
+    if( window.event.keyCode == 13 ){
+    return false;
+    }
+  }
+
 });

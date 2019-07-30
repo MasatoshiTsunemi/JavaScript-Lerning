@@ -1,0 +1,40 @@
+①講座作成について、変数を使わないケースでもシンプルにはできると思うので、
+読みやすさを意識して検討してみてください。
+
+var add_li = $("<li class='seminar' id=" + id + "></li>");
+var add_h2 = $("<h2> " + name + " </h2>");
+var add_p_check = $("<p class='check'>空き席状況を確認</p>");
+var add_p_edit = $("<p class='edit'>編集</p>");
+var add_p_delete = $("<p class='delete'>削除</p>");
+$(add_li).append(add_h2, add_p_check, add_p_edit, add_p_delete);
+参考までに
+
+$(add_li).append($("<li class='seminar' id=" + id + "></li>"));
+$(add_li).append($("<h2> " + name + " </h2>"));
+
+⇒変数の使用を少なくする書き方に変更(137~147)
+
+②変数名がちょっとわかりにくいです。全ての講座データなので、
+course_dateとか、all_course_dataとかのほうが分かりやすくなるかなと思います。
+course_idに関しても同様です。dataの長さを表しているので、その意味合いになるように命名してみてください。
+
+// jsonから講座オブジェクトの作成
+    course_object = data;
+    course_id = data.length;
+
+⇒変数の意味を考えて、変数名を変更(3,4)
+
+③変数の命名時にキャメルケースのものとスネークケースのものがあるので、どちらかに統一しましょう。
+
+idName
+course_object
+
+⇒変数名をスネークケースに統一
+
+④<h2>からのセミナータイトルを取得していますが、
+JSONデータをcourse_objectにもっているので、そちらから参照してみてください。
+
+// 現在の講座名をtextに表示
+$('#text').val($($(this).siblings('h2')).text())
+
+⇒jsonデータを持っている、all_course_objectからセミナータイトルを取得(56)
